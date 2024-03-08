@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34607.119
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRS_MediatoR_CRUD", "CQRS_MediatoR_CRUD\CQRS_MediatoR_CRUD.csproj", "{5C0E13ED-678C-433F-92EB-424E238F3A58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRS_MediatorR_Library", "CQRS_MediatorR_Library\CQRS_MediatorR_Library.csproj", "{A64BC3B5-3783-4B9B-AB0E-B5E6B127DCBE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C0E13ED-678C-433F-92EB-424E238F3A58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C0E13ED-678C-433F-92EB-424E238F3A58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C0E13ED-678C-433F-92EB-424E238F3A58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C0E13ED-678C-433F-92EB-424E238F3A58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A64BC3B5-3783-4B9B-AB0E-B5E6B127DCBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A64BC3B5-3783-4B9B-AB0E-B5E6B127DCBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A64BC3B5-3783-4B9B-AB0E-B5E6B127DCBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A64BC3B5-3783-4B9B-AB0E-B5E6B127DCBE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {49B117F9-43ED-43E7-90C5-396A2BD53725}
+	EndGlobalSection
+EndGlobal
