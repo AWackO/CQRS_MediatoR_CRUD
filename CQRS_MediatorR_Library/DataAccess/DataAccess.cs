@@ -28,13 +28,13 @@ namespace CQRS_MediatorR_Library.DataAccess
 
         public GroceryModel UpdateGrocery(int id, string newName, Types newProductType)
         {
-            GroceryModel existingItem = shoppingCart.FirstOrDefault(item => item.Id == id);
-            if (existingItem != null)
+            GroceryModel foundItem = shoppingCart.FirstOrDefault(item => item.Id == id);
+            if (foundItem != null)
             {
-                existingItem.Name = newName;
-                existingItem.ProductType = newProductType;
+                foundItem.Name = newName;
+                foundItem.ProductType = newProductType;
 
-                return existingItem;
+                return foundItem;
             }
             else
             {

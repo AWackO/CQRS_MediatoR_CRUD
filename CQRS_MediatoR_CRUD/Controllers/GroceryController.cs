@@ -46,7 +46,7 @@ namespace CQRS_MediatoR_CRUD.Controllers
         [HttpPut("{id}")]
         public async Task<GroceryModel> Put(int id, [FromBody] GroceryModel value)
         {
-            var model = new UpdateGroceryCommand(value.Id, value.Name, value.ProductType);
+            var model = new UpdateGroceryCommand(value.Id = id, value.Name, value.ProductType);
             return await _mediator.Send(model);
         }
 

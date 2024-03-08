@@ -1,6 +1,9 @@
 ﻿
+using System.Text.Json.Serialization;
+
 namespace CQRS_MediatorR_Library.Models
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Types
     {
         Fruit,
