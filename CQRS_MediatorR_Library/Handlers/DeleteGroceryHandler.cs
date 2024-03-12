@@ -1,5 +1,5 @@
 ﻿using CQRS_MediatorR_Library.Commands;
-using CQRS_MediatorR_Library.DataAccess;
+using CQRS_MediatorR_Library.DbData;
 using CQRS_MediatorR_Library.Models;
 using MediatR;
 
@@ -7,16 +7,28 @@ namespace CQRS_MediatorR_Library.Handlers
 {
     public class DeleteGroceryHandler : IRequestHandler<DeleteGroceryCommand, GroceryModel>
     {
-        private readonly IDataAccess _data;
+        private readonly DataContext _context;
 
-        public DeleteGroceryHandler(IDataAccess data)
+        public DeleteGroceryHandler(DataContext context)
         {
-            _data = data;
+            _context = context;
         }
 
         public async Task<GroceryModel> Handle(DeleteGroceryCommand request, CancellationToken cancellationToken)
         {
-            return await Task.FromResult(_data.DeleteGrocery(request.Id));
+            var dbGrocery = await _context.Groceries.FindAsync(request.Id);
+
+            var deletedGrocery = new GroceryModel
+            {
+                Id = dbGrocery.Id,
+                Name = dbGrocery.Name,
+                ProductType = dbGrocery.ProductType
+            };
+
+            _context.Groceries.Remove(dbGrocery);
+            await _context.SaveChangesAsync();
+
+            return deletedGrocery;
         }
     }
 }

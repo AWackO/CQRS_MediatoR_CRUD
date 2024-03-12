@@ -1,21 +1,23 @@
-﻿using CQRS_MediatorR_Library.DataAccess;
+﻿using CQRS_MediatorR_Library.DbData;
 using CQRS_MediatorR_Library.Models;
 using CQRS_MediatorR_Library.Queries;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CQRS_MediatorR_Library.Handlers
 {
     public class GetGroceryListHandler : IRequestHandler<GetGroceryListQuery, List<GroceryModel>>
     {
-        private readonly IDataAccess _data;
+        private readonly DataContext _data;
 
-        public GetGroceryListHandler(IDataAccess data)
+        public GetGroceryListHandler(DataContext data)
         {
             _data = data;
         }
-        public Task<List<GroceryModel>> Handle(GetGroceryListQuery request, CancellationToken cancellationToken)
+        public async Task<List<GroceryModel>> Handle(GetGroceryListQuery request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_data.GetGroceries());
+            var groceries = await _data.Groceries.ToListAsync();
+            return groceries;
         }
     }
 }

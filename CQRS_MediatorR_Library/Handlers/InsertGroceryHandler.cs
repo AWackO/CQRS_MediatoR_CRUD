@@ -1,5 +1,5 @@
 ﻿using CQRS_MediatorR_Library.Commands;
-using CQRS_MediatorR_Library.DataAccess;
+using CQRS_MediatorR_Library.DbData;
 using CQRS_MediatorR_Library.Models;
 using MediatR;
 
@@ -7,15 +7,25 @@ namespace CQRS_MediatorR_Library.Handlers
 {
     public class InsertGroceryHandler : IRequestHandler<InsertGroceryCommand, GroceryModel>
     {
-        private readonly IDataAccess _data;
+        private readonly DataContext _context;
 
-        public InsertGroceryHandler(IDataAccess data)
+        public InsertGroceryHandler(DataContext context)
         {
-            _data = data;
+            _context = context;
         }
+
         public async Task<GroceryModel> Handle(InsertGroceryCommand request, CancellationToken cancellationToken)
         {
-            return await Task.FromResult(_data.InsertGrocery(request.Name, request.ProductType));
+            var newGrocery = new GroceryModel
+            {
+                Name = request.Name,
+                ProductType = request.ProductType
+            };
+
+            _context.Groceries.Add(newGrocery);
+            await _context.SaveChangesAsync();
+
+            return newGrocery;
         }
     }
 }
