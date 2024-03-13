@@ -1,34 +1,25 @@
 ﻿using CQRS_MediatorR_Library.Commands;
-using CQRS_MediatorR_Library.DbData;
 using CQRS_MediatorR_Library.Models;
+using CQRS_MediatorR_Library.Repositories;
 using MediatR;
 
-namespace CQRS_MediatorR_Library.Handlers
+namespace CQRS_MediatorR_Library.Handlers;
+
+public class DeleteGroceryHandler : IRequestHandler<DeleteGroceryCommand, GroceryModel>
 {
-    public class DeleteGroceryHandler : IRequestHandler<DeleteGroceryCommand, GroceryModel>
+    private readonly IGroceryRepository<GroceryModel> _repository;
+
+    public DeleteGroceryHandler(IGroceryRepository<GroceryModel> repository)
     {
-        private readonly DataContext _context;
+        _repository = repository;
+    }
 
-        public DeleteGroceryHandler(DataContext context)
-        {
-            _context = context;
-        }
+    public async Task<GroceryModel> Handle(DeleteGroceryCommand request, CancellationToken cancellationToken)
+    {
+        var groceryToDelete = await _repository.GetByIdAsync(request.Id);
 
-        public async Task<GroceryModel> Handle(DeleteGroceryCommand request, CancellationToken cancellationToken)
-        {
-            var dbGrocery = await _context.Groceries.FindAsync(request.Id);
+        await _repository.DeleteAsync(groceryToDelete);
 
-            var deletedGrocery = new GroceryModel
-            {
-                Id = dbGrocery.Id,
-                Name = dbGrocery.Name,
-                ProductType = dbGrocery.ProductType
-            };
-
-            _context.Groceries.Remove(dbGrocery);
-            await _context.SaveChangesAsync();
-
-            return deletedGrocery;
-        }
+        return groceryToDelete;
     }
 }

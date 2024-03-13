@@ -1,22 +1,21 @@
-﻿using CQRS_MediatorR_Library.DbData;
-using CQRS_MediatorR_Library.Models;
+﻿using CQRS_MediatorR_Library.Models;
 using CQRS_MediatorR_Library.Queries;
+using CQRS_MediatorR_Library.Repositories;
 using MediatR;
 
 namespace CQRS_MediatorR_Library.Handlers;
 
 public class GetGroceryByIdHandler : IRequestHandler<GetGroceryByIdQuery, GroceryModel>
 {
-    private readonly DataContext _context;
+    private readonly IGroceryRepository<GroceryModel> _repository;
 
-    public GetGroceryByIdHandler(DataContext context)
+    public GetGroceryByIdHandler(IGroceryRepository<GroceryModel> repository)
     {
-        _context = context;
+        _repository = repository;
     }
+
     public async Task<GroceryModel> Handle(GetGroceryByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await _context.Groceries.FindAsync(request.id);
-
-        return result;
+        return await _repository.GetByIdAsync(request.id);
     }
 }
