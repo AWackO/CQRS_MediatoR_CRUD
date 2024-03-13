@@ -1,9 +1,8 @@
-﻿using CQRS_MediatorR_Library.DataAccess;
-using CQRS_MediatorR_Library.Models;
+﻿using CQRS_MediatorR_Library.Models;
 
 namespace CQRS_MediatorR_Library.Repositories;
 
-public class InMemoryGroceryRepository : IInMemoryRepository<GroceryModel>
+public class InMemoryGroceryRepository : IGroceryRepository<GroceryModel>
 {
     private readonly List<GroceryModel> _shoppingCart;
 
@@ -17,26 +16,26 @@ public class InMemoryGroceryRepository : IInMemoryRepository<GroceryModel>
         };
     }
 
-    public List<GroceryModel> GetAll()
+    public Task<List<GroceryModel>> GetAllAsync()
     {
-        return _shoppingCart;
+        return Task.FromResult(_shoppingCart);
     }
 
-    public GroceryModel Add(GroceryModel entity)
-    {
-        entity.Id = _shoppingCart.Any() ? _shoppingCart.Max(x => x.Id) + 1 : 1;
-        _shoppingCart.Add(entity);
-        return entity;
-    }
-
-    public GroceryModel GetById(object id)
+    public Task<GroceryModel> GetByIdAsync(object id)
     {
         var itemId = (int)id;
         var grocery = _shoppingCart.FirstOrDefault(item => item.Id == itemId);
-        return grocery;
+        return Task.FromResult(grocery);
     }
 
-    public GroceryModel Update(GroceryModel entity)
+    public Task<GroceryModel> AddAsync(GroceryModel entity)
+    {
+        entity.Id = _shoppingCart.Any() ? _shoppingCart.Max(x => x.Id) + 1 : 1;
+        _shoppingCart.Add(entity);
+        return Task.FromResult(entity);
+    }
+
+    public Task UpdateAsync(GroceryModel entity)
     {
         var existingItem = _shoppingCart.FirstOrDefault(item => item.Id == entity.Id);
 
@@ -50,12 +49,12 @@ public class InMemoryGroceryRepository : IInMemoryRepository<GroceryModel>
             throw new KeyNotFoundException($"Grocery item with id {entity.Id} not found.");
         }
 
-        return existingItem;
+        return Task.CompletedTask;
     }
 
-    public GroceryModel Delete(object id)
+    public Task DeleteAsync(GroceryModel entity)
     {
-        var itemToRemove = _shoppingCart.FirstOrDefault(item => item.Id == (int)id);
+        var itemToRemove = _shoppingCart.FirstOrDefault(item => item.Id == entity.Id);
 
         if (itemToRemove != null)
         {
@@ -63,9 +62,9 @@ public class InMemoryGroceryRepository : IInMemoryRepository<GroceryModel>
         }
         else
         {
-            throw new KeyNotFoundException($"Grocery item with id {id} not found.");
+            throw new KeyNotFoundException($"Grocery item with id {entity.Id} not found.");
         }
 
-        return itemToRemove;
+        return Task.CompletedTask;
     }
 }
