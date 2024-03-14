@@ -1,15 +1,12 @@
-﻿namespace CQRS_MediatorR_Library.Repositories;
+﻿using CQRS_MediatorR_Library.Models;
 
-public interface IGroceryRepository<TEntity> where TEntity : class
+namespace CQRS_MediatorR_Library.Repositories;
+
+public interface IGroceryRepository
 {
-    Task<List<TEntity>> GetAllAsync();
-
-    Task<TEntity> GetByIdAsync(object id);
-
-    Task<TEntity> AddAsync(TEntity entity);
-
-    Task UpdateAsync(TEntity entity);
-
-    Task DeleteAsync(TEntity entity);
-
+    Task<List<GroceryModel>> GetAllAsync();
+    Task<GroceryModel> GetByIdAsync(int id);
+    Task<GroceryModel> AddAsync(GroceryModel entity);
+    Task UpdateAsync(GroceryModel entity);
+    Task DeleteAsync(int id);
 }

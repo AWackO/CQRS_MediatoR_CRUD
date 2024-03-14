@@ -3,23 +3,25 @@ using CQRS_MediatorR_Library.Models;
 using CQRS_MediatorR_Library.Repositories;
 using MediatR;
 
-namespace CQRS_MediatorR_Library.Handlers;
-
-public class DeleteGroceryHandler : IRequestHandler<DeleteGroceryCommand, GroceryModel>
+namespace CQRS_MediatorR_Library.Handlers
 {
-    private readonly IGroceryRepository<GroceryModel> _repository;
-
-    public DeleteGroceryHandler(IGroceryRepository<GroceryModel> repository)
+    public class DeleteGroceryHandler : IRequestHandler<DeleteGroceryCommand, GroceryModel>
     {
-        _repository = repository;
-    }
+        private readonly IGroceryRepository _repository;
 
-    public async Task<GroceryModel> Handle(DeleteGroceryCommand request, CancellationToken cancellationToken)
-    {
-        var groceryToDelete = await _repository.GetByIdAsync(request.Id);
+        public DeleteGroceryHandler(IGroceryRepository repository)
+        {
+            _repository = repository;
+        }
 
-        await _repository.DeleteAsync(groceryToDelete);
+        public async Task<GroceryModel> Handle(DeleteGroceryCommand request, CancellationToken cancellationToken)
+        {
 
-        return groceryToDelete;
+            var groceryToDelete = await _repository.GetByIdAsync(request.Id);
+
+            await _repository.DeleteAsync(request.Id);
+
+            return groceryToDelete;
+        }
     }
 }

@@ -1,11 +1,9 @@
-﻿namespace CQRS_MediatorR_Library.Repositories;
-
-using CQRS_MediatorR_Library.DbData;
+﻿using CQRS_MediatorR_Library.DbData;
+using CQRS_MediatorR_Library.Models;
+using CQRS_MediatorR_Library.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-public class GroceryRepository<TEntity> : IGroceryRepository<TEntity> where TEntity : class
+public class GroceryRepository : IGroceryRepository
 {
     private readonly DataContext _data;
 
@@ -14,33 +12,36 @@ public class GroceryRepository<TEntity> : IGroceryRepository<TEntity> where TEnt
         _data = data;
     }
 
-    public async Task<List<TEntity>> GetAllAsync()
+    public async Task<List<GroceryModel>> GetAllAsync()
     {
-        return await _data.Set<TEntity>().ToListAsync();
+        return await _data.Groceries.ToListAsync();
     }
 
-    public async Task<TEntity> GetByIdAsync(object id)
+    public async Task<GroceryModel> GetByIdAsync(int id)
     {
-        return await _data.Set<TEntity>().FindAsync(id);
+        return await _data.Groceries.FindAsync(id);
     }
 
-    public async Task<TEntity> AddAsync(TEntity entity)
+    public async Task<GroceryModel> AddAsync(GroceryModel entity)
     {
-        await _data.Set<TEntity>().AddAsync(entity);
+        _data.Groceries.Add(entity);
         await _data.SaveChangesAsync();
         return entity;
     }
 
-    public async Task UpdateAsync(TEntity entity)
+    public async Task UpdateAsync(GroceryModel entity)
     {
-        _data.Set<TEntity>().Update(entity);
+        _data.Entry(entity).State = EntityState.Modified;
         await _data.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(TEntity entity)
+    public async Task DeleteAsync(int id)
     {
-        _data.Set<TEntity>().Remove(entity);
-        await _data.SaveChangesAsync();
+        var entity = await _data.Groceries.FindAsync(id);
+        if (entity != null)
+        {
+            _data.Groceries.Remove(entity);
+            await _data.SaveChangesAsync();
+        }
     }
 }
-

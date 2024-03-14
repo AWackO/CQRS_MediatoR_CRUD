@@ -3,26 +3,27 @@ using CQRS_MediatorR_Library.Models;
 using CQRS_MediatorR_Library.Repositories;
 using MediatR;
 
-namespace CQRS_MediatorR_Library.Handlers;
-
-public class UpdateGroceryHandler : IRequestHandler<UpdateGroceryCommand, GroceryModel>
+namespace CQRS_MediatorR_Library.Handlers
 {
-    private readonly IGroceryRepository<GroceryModel> _repository;
-
-    public UpdateGroceryHandler(IGroceryRepository<GroceryModel> repository)
+    public class UpdateGroceryHandler : IRequestHandler<UpdateGroceryCommand, GroceryModel>
     {
-        _repository = repository;
-    }
+        private readonly IGroceryRepository _repository;
 
-    public async Task<GroceryModel> Handle(UpdateGroceryCommand request, CancellationToken cancellationToken)
-    {
-        var groceryToUpdate = await _repository.GetByIdAsync(request.Id);
+        public UpdateGroceryHandler(IGroceryRepository repository)
+        {
+            _repository = repository;
+        }
 
-        groceryToUpdate.Name = request.Name;
-        groceryToUpdate.ProductType = request.ProductType;
+        public async Task<GroceryModel> Handle(UpdateGroceryCommand request, CancellationToken cancellationToken)
+        {
+            var groceryToUpdate = await _repository.GetByIdAsync(request.Id);
 
-        await _repository.UpdateAsync(groceryToUpdate);
+            groceryToUpdate.Name = request.Name;
+            groceryToUpdate.ProductType = request.ProductType;
 
-        return groceryToUpdate;
+            await _repository.UpdateAsync(groceryToUpdate);
+
+            return groceryToUpdate;
+        }
     }
 }

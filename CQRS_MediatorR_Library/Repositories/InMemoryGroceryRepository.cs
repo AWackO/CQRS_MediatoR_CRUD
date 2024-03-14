@@ -1,8 +1,7 @@
 ﻿using CQRS_MediatorR_Library.Models;
+using CQRS_MediatorR_Library.Repositories;
 
-namespace CQRS_MediatorR_Library.Repositories;
-
-public class InMemoryGroceryRepository : IGroceryRepository<GroceryModel>
+public class InMemoryGroceryRepository : IGroceryRepository
 {
     private readonly List<GroceryModel> _shoppingCart;
 
@@ -21,10 +20,9 @@ public class InMemoryGroceryRepository : IGroceryRepository<GroceryModel>
         return Task.FromResult(_shoppingCart);
     }
 
-    public Task<GroceryModel> GetByIdAsync(object id)
+    public Task<GroceryModel> GetByIdAsync(int id)
     {
-        var itemId = (int)id;
-        var grocery = _shoppingCart.FirstOrDefault(item => item.Id == itemId);
+        var grocery = _shoppingCart.FirstOrDefault(item => item.Id == id);
         return Task.FromResult(grocery);
     }
 
@@ -38,7 +36,6 @@ public class InMemoryGroceryRepository : IGroceryRepository<GroceryModel>
     public Task UpdateAsync(GroceryModel entity)
     {
         var existingItem = _shoppingCart.FirstOrDefault(item => item.Id == entity.Id);
-
         if (existingItem != null)
         {
             existingItem.Name = entity.Name;
@@ -48,23 +45,20 @@ public class InMemoryGroceryRepository : IGroceryRepository<GroceryModel>
         {
             throw new KeyNotFoundException($"Grocery item with id {entity.Id} not found.");
         }
-
         return Task.CompletedTask;
     }
 
-    public Task DeleteAsync(GroceryModel entity)
+    public Task DeleteAsync(int id)
     {
-        var itemToRemove = _shoppingCart.FirstOrDefault(item => item.Id == entity.Id);
-
+        var itemToRemove = _shoppingCart.FirstOrDefault(item => item.Id == id);
         if (itemToRemove != null)
         {
             _shoppingCart.Remove(itemToRemove);
         }
         else
         {
-            throw new KeyNotFoundException($"Grocery item with id {entity.Id} not found.");
+            throw new KeyNotFoundException($"Grocery item with id {id} not found.");
         }
-
         return Task.CompletedTask;
     }
 }
