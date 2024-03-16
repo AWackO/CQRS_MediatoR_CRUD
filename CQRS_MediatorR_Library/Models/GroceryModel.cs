@@ -15,7 +15,9 @@ namespace CQRS_MediatorR_Library.Models
     public class GroceryModel
     {
         public int Id { get; set; }
-        public required string Name { get; set; }
+        public string Name { get; set; } // Removed "required" keyword as it's not valid here
         public Types ProductType { get; set; }
+        public int ShoppingBagId { get; set; }
+        public ShoppingBag ShoppingBag { get; set; }
     }
 }

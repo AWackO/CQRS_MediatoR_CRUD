@@ -9,4 +9,5 @@ public interface IGroceryRepository
     Task<GroceryModel> AddAsync(GroceryModel entity);
     Task UpdateAsync(GroceryModel entity);
     Task DeleteAsync(int id);
+
 }

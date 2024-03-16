@@ -57,5 +57,13 @@ namespace CQRS_MediatoR_CRUD.Controllers
             var model = new DeleteGroceryCommand(id);
             return await _mediator.Send(model);
         }
+
+        [HttpGet("meat-items")]
+        public async Task<ActionResult<List<GroceryModel>>> GetMeatItems()
+        {
+            var query = new GetMeatItemsQuery();
+            var meatItems = await _mediator.Send(query);
+            return Ok(meatItems);
+        }
     }
 }
