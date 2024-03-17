@@ -4,6 +4,16 @@ namespace CQRS_MediatorR_Library.Models;
 
 public class ShoppingBag
 {
+    public static ShoppingBag FromGroceries(int id, string name, List<GroceryModel> groceries)
+    {
+        return new ShoppingBag
+        {
+            Id = id,
+            Name = name,
+            Groceries = groceries.OrderBy(g => g.Name).ToList()
+        };
+    }
+
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Sizes
     {

@@ -42,12 +42,7 @@ public class ShoppingBagRepository : IShoppingBagRepository
         var shoppingBags = await _data.ShoppingBags
                 .Include(sb => sb.Groceries)
                 .Where(sb => sb.Groceries.Count(g => g.ProductType == productType) >= minItemCount)
-                .Select(sb => new ShoppingBag
-                {
-                    Id = sb.Id,
-                    Name = sb.Name,
-                    Groceries = sb.Groceries.OrderBy(g => g.Name).ToList()
-                })
+                .Select(sb => ShoppingBag.FromGroceries(sb.Id, sb.Name, sb.Groceries))
                 .ToListAsync();
 
         return _mapper.Map<List<ShoppingBagDTO>>(shoppingBags);
