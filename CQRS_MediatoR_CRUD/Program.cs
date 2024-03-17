@@ -1,4 +1,5 @@
 using CQRS_MediatorR_Library.DbData;
+using CQRS_MediatorR_Library.Mappings;
 using CQRS_MediatorR_Library.Queries;
 using CQRS_MediatorR_Library.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ builder.Services.AddSingleton<IGroceryRepository, InMemoryGroceryRepository>();
 builder.Services.AddScoped<IGroceryRepository, GroceryRepository>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetGroceryListQuery).Assembly));
 builder.Services.AddScoped<IShoppingBagRepository, ShoppingBagRepository>();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options =>

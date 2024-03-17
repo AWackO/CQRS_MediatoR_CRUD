@@ -5,17 +5,11 @@
 namespace CQRS_MediatoR_CRUD.Migrations
 {
     /// <inheritdoc />
-    public partial class AddShoppingBagEntity : Migration
+    public partial class IntiialReCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "ShoppingBagId",
-                table: "Groceries",
-                type: "int",
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "ShoppingBags",
                 columns: table => new
@@ -29,36 +23,41 @@ namespace CQRS_MediatoR_CRUD.Migrations
                     table.PrimaryKey("PK_ShoppingBags", x => x.Id);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Groceries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductType = table.Column<int>(type: "int", nullable: false),
+                    ShoppingBagId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Groceries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Groceries_ShoppingBags_ShoppingBagId",
+                        column: x => x.ShoppingBagId,
+                        principalTable: "ShoppingBags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Groceries_ShoppingBagId",
                 table: "Groceries",
                 column: "ShoppingBagId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Groceries_ShoppingBags_ShoppingBagId",
-                table: "Groceries",
-                column: "ShoppingBagId",
-                principalTable: "ShoppingBags",
-                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Groceries_ShoppingBags_ShoppingBagId",
-                table: "Groceries");
+            migrationBuilder.DropTable(
+                name: "Groceries");
 
             migrationBuilder.DropTable(
                 name: "ShoppingBags");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Groceries_ShoppingBagId",
-                table: "Groceries");
-
-            migrationBuilder.DropColumn(
-                name: "ShoppingBagId",
-                table: "Groceries");
         }
     }
 }

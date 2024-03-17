@@ -1,4 +1,6 @@
-﻿using CQRS_MediatorR_Library.DbData;
+﻿using AutoMapper;
+using CQRS_MediatorR_Library.DbData;
+using CQRS_MediatorR_Library.DTOs;
 using CQRS_MediatorR_Library.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,15 +9,18 @@ namespace CQRS_MediatorR_Library.Repositories;
 public class ShoppingBagRepository : IShoppingBagRepository
 {
     private readonly DataContext _data;
-
-    public ShoppingBagRepository(DataContext data)
+    private readonly IMapper _mapper;
+    public ShoppingBagRepository(DataContext data, IMapper mapper)
     {
         _data = data;
+        _mapper = mapper;
     }
 
     public async Task<List<ShoppingBag>> GetAllAsync()
     {
-        return await _data.ShoppingBags.ToListAsync();
+        return await _data.ShoppingBags
+            .Include(sb => sb.Groceries)
+            .ToListAsync();
     }
 
     public async Task<ShoppingBag> AddAsync(ShoppingBag shoppingBag)
@@ -28,7 +33,23 @@ public class ShoppingBagRepository : IShoppingBagRepository
     public async Task<ShoppingBag> GetByIdAsync(int id)
     {
         return await _data.ShoppingBags
-            .Include(sb => sb.GroceryModels)
+            .Include(sb => sb.Groceries)
             .FirstOrDefaultAsync(sb => sb.Id == id);
+    }
+
+    public async Task<List<ShoppingBagDTO>> GetShoppingBagWith2OrMoreMeatsOnly(Types productType, int minItemCount)
+    {
+        var shoppingBags = await _data.ShoppingBags
+                .Include(sb => sb.Groceries)
+                .Where(sb => sb.Groceries.Count(g => g.ProductType == productType) >= minItemCount)
+                .Select(sb => new ShoppingBag
+                {
+                    Id = sb.Id,
+                    Name = sb.Name,
+                    Groceries = sb.Groceries.OrderBy(g => g.Name).ToList()
+                })
+                .ToListAsync();
+
+        return _mapper.Map<List<ShoppingBagDTO>>(shoppingBags);
     }
 }

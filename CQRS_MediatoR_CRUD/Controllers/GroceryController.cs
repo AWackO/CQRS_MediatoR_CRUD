@@ -59,9 +59,9 @@ namespace CQRS_MediatoR_CRUD.Controllers
         }
 
         [HttpGet("meat-items")]
-        public async Task<ActionResult<List<GroceryModel>>> GetMeatItems()
+        public async Task<ActionResult<List<GroceryModel>>> GetMeatItems(Types type, int minItemCount)
         {
-            var query = new GetMeatItemsQuery();
+            var query = new GetAllMeatItemsQuery(type, minItemCount);
             var meatItems = await _mediator.Send(query);
             return Ok(meatItems);
         }

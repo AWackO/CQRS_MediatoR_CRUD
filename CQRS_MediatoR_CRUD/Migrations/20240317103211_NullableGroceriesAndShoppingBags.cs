@@ -5,10 +5,33 @@
 namespace CQRS_MediatoR_CRUD.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateGroceryModel : Migration
+    public partial class NullableGroceriesAndShoppingBags : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Groceries_ShoppingBags_ShoppingBagId",
+                table: "Groceries");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "ShoppingBagId",
+                table: "Groceries",
+                type: "int",
+                nullable: true,
+                oldClrType: typeof(int),
+                oldType: "int");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Groceries_ShoppingBags_ShoppingBagId",
+                table: "Groceries",
+                column: "ShoppingBagId",
+                principalTable: "ShoppingBags",
+                principalColumn: "Id");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_Groceries_ShoppingBags_ShoppingBagId",
@@ -31,29 +54,6 @@ namespace CQRS_MediatoR_CRUD.Migrations
                 principalTable: "ShoppingBags",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Groceries_ShoppingBags_ShoppingBagId",
-                table: "Groceries");
-
-            migrationBuilder.AlterColumn<int>(
-                name: "ShoppingBagId",
-                table: "Groceries",
-                type: "int",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldType: "int");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Groceries_ShoppingBags_ShoppingBagId",
-                table: "Groceries",
-                column: "ShoppingBagId",
-                principalTable: "ShoppingBags",
-                principalColumn: "Id");
         }
     }
 }

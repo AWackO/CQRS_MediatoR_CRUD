@@ -1,4 +1,5 @@
 ﻿using CQRS_MediatorR_Library.Commands;
+using CQRS_MediatorR_Library.DTOs;
 using CQRS_MediatorR_Library.Models;
 using CQRS_MediatorR_Library.Queries;
 using MediatR;
@@ -17,7 +18,6 @@ namespace CQRS_MediatoR_CRUD.Controllers
             _mediator = mediator;
         }
 
-        // GET: api/<ShoppingBagController>
         [HttpGet]
         public async Task<ActionResult<List<ShoppingBag>>> Get()
         {
@@ -25,7 +25,6 @@ namespace CQRS_MediatoR_CRUD.Controllers
             return Ok(shoppingBags);
         }
 
-        // POST api/<ShoppingBagController>
         [HttpPost]
         public async Task<ActionResult<ShoppingBag>> Post([FromBody] ShoppingBag value)
         {
@@ -37,6 +36,14 @@ namespace CQRS_MediatoR_CRUD.Controllers
         public async Task<IActionResult> GetShoppingBagById(int id)
         {
             var query = new GetShoppingBagByIdQuery(id);
+            var shoppingBag = await _mediator.Send(query);
+
+            return Ok(shoppingBag);
+        }
+        [HttpGet("Get-Meats-Only")]
+        public async Task<ActionResult<List<ShoppingBagDTO>>> GetShoppingBagWith2OrMoreMeatsOnly([FromQuery] Types productType, [FromQuery] int minItemCount)
+        {
+            var query = new GetAllMeatItemsQuery(productType, minItemCount);
             var shoppingBag = await _mediator.Send(query);
 
             return Ok(shoppingBag);
