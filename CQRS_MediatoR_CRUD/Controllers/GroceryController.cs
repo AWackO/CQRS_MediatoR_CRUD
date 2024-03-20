@@ -20,15 +20,15 @@ public class GroceryController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<List<GroceryModel>> Get(GetGroceryListQuery query)
+    public async Task<List<GroceryModel>> Get()
     {
         return await _mediator.Send(new GetGroceryListQuery());
     }
 
     [HttpGet("{id}")]
-    public async Task<GroceryModel> Get(GetGroceryByIdQuery query)
+    public async Task<GroceryModel> Get(int id)
     {
-        return await _mediator.Send(query);
+        return await _mediator.Send(new GetGroceryByIdQuery(id));
     }
 
     [HttpPost]
