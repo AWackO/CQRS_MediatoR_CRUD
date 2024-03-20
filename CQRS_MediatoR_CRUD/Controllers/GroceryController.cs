@@ -22,7 +22,7 @@ public class GroceryController : ControllerBase
     [HttpGet]
     public async Task<List<GroceryModel>> Get(GetGroceryListQuery query)
     {
-        return await _mediator.Send(query);
+        return await _mediator.Send(new GetGroceryListQuery());
     }
 
     [HttpGet("{id}")]
